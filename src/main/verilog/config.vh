@@ -53,6 +53,18 @@
    `define NEXYS4_COMMON
   `endif
 
+  `ifdef ARTY_A7_35
+   `define ARTY_COMMON
+  `endif
+  
+  `ifdef ARTY_A7_100
+   `define ARTY_COMMON
+  `endif
+
+  `ifdef ARTY_S7_50
+   `define ARTY_COMMON
+  `endif
+
   //`define ADD_MINION_SD
 
  `endif //  `ifdef FPGA

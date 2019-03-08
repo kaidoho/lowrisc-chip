@@ -50,6 +50,22 @@ module chip_top
    output        ddr_cke,
    output [1:0]  ddr_dm,
    output        ddr_odt,
+ `elsif ARTY_COMMON
+   // DDR3 RAM
+   inout wire [15:0]  ddr_dq,
+   inout wire [1:0]   ddr_dqs_n,
+   inout wire [1:0]   ddr_dqs_p,
+   output [13:0] ddr_addr,
+   output [2:0]  ddr_ba,
+   output        ddr_ras_n,
+   output        ddr_cas_n,
+   output        ddr_we_n,
+   output        ddr_reset_n,
+   output        ddr_ck_n,
+   output        ddr_ck_p,
+   output        ddr_cke,
+   output [1:0]  ddr_dm,
+   output        ddr_odt,
  `elsif NEXYS4
    // DDR2 RAM
    inout wire [15:0]  ddr_dq,
@@ -383,6 +399,23 @@ logic mig_sys_clk, clk_pixel;
    assign sys_rst = ~rstn;
       
  `endif //  `ifdef NEXYS4_COMMON
+
+ `ifdef ARTY_COMMON
+   //clock generator
+   logic clk_io_uart; // UART IO clock for debug
+
+   clk_wiz_0 clk_gen
+     (
+      .clk_in1       ( clk_p         ), // 100 MHz onboard
+      .clk_out1      ( mig_sys_clk   ), // 200 MHz
+      .clk_io_uart   ( clk_io_uart   ), // 60 MHz
+      .resetn        ( rst_top       ),
+      .locked        ( clk_locked_wiz )
+      );
+   assign clk_locked = clk_locked_wiz & rst_top;
+   assign sys_rst = ~rstn;
+      
+ `endif //  `ifdef ARTY_COMMON
 
    // DRAM controller
    mig_7series_0 dram_ctl
